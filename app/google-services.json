@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1046765737579",
+    "project_id": "toilet-seoul",
+    "storage_bucket": "toilet-seoul.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046765737579:android:0917456b8673b762ea032e",
+        "android_client_info": {
+          "package_name": "com.example.toilet_seoul"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046765737579-sdefstgibmgsv5nnpcfdp2iod8c1qg70.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2uKyez8Jor1oxS8Ml59WP6H63z9ywF9s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046765737579-sdefstgibmgsv5nnpcfdp2iod8c1qg70.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

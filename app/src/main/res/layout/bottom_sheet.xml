@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/main_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:orientation="vertical">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/appBarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorAccent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+
+                    <ImageButton
+                        android:id="@+id/cancelBtn"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="?attr/actionBarSize"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_cancel"
+                        app:tint="@android:color/white" />
+
+                    <ImageButton
+                        android:id="@+id/editBtn"
+                        android:layout_width="?attr/actionBarSize"
+                        android:layout_height="?attr/actionBarSize"
+                        android:layout_marginStart="300dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@android:color/white" />
+
+                </LinearLayout>
+
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id = "@+id/seeMore"
+                        android:layout_width="150dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/swipe_up_handle"
+                        app:layout_anchor="@+id/linearLayout"
+                        app:layout_anchorGravity="top|center" />
+
+                    <LinearLayout
+                        android:id="@+id/bottomSheet"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="312dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/spacing_large"
+                                android:gravity="center_vertical"
+                                android:minHeight="50dp"
+                                android:paddingStart="@dimen/spacing_small"
+                                android:paddingEnd="@dimen/spacing_small"
+                                android:text="유니온빌딩"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+
+                            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                                android:id="@+id/SOSbtn"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@android:color/transparent"
+                                android:backgroundTint="@color/colorAccent"
+                                android:clickable="true"
+                                app:srcCompat="@drawable/ic_sos"
+                                app:tint="@color/white" />
+
+
+                        </LinearLayout>
+
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_small">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="15dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <RatingBar
+                                        style="?android:attr/ratingBarStyleIndicator"
+                                        android:layout_width="180dp"
+                                        android:layout_height="40dp"
+                                        android:numStars="5"
+                                        android:rating="3.5"
+                                        android:stepSize="0.5" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="4.7 (51)"
+                                        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+
+                                </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginStart="@dimen/spacing_large"
+                                android:background="@color/grey_10" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/spacing_small"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <ImageButton
+                                        android:layout_width="@dimen/spacing_xxlarge"
+                                        android:layout_height="@dimen/spacing_xxlarge"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_location"
+                                        app:tint="@color/grey_20" />
+
+                                    <View
+                                        android:layout_width="@dimen/spacing_mlarge"
+                                        android:layout_height="0dp" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:text="경기도 과천시 별양상가3로 5(별양동)"
+                                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                        android:textColor="@color/grey_90" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <ImageButton
+                                        android:layout_width="@dimen/spacing_xxlarge"
+                                        android:layout_height="@dimen/spacing_xxlarge"
+                                        android:background="@android:color/transparent"
+                                        app:srcCompat="@drawable/ic_phone"
+                                        app:tint="@color/grey_20" />
+
+                                    <View
+                                        android:layout_width="@dimen/spacing_mlarge"
+                                        android:layout_height="0dp" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:text="02-507-3970"
+                                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                        android:textColor="@color/grey_90" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal">
+
+                                    <ImageButton
+                                        android:layout_width="@dimen/spacing_xxlarge"
+                                        android:layout_height="@dimen/spacing_xxlarge"
+                                        android:background="@android:color/transparent"
+                                        android:src="@drawable/ic_schedule"
+                                        app:tint="@color/grey_20" />
+
+                                    <View
+                                        android:layout_width="@dimen/spacing_mlarge"
+                                        android:layout_height="0dp" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:text="00:00~24:00"
+                                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                                        android:textColor="@color/grey_90" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <EditText
+                        android:id="@+id/contentText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:hint="화장실 후기를 작성해주세요!"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:inputType="text|textMultiLine"
+                        android:scrollbars="vertical"
+                        android:lines="6"
+                        android:gravity="top|left"/>
+
+                    <LinearLayout
+                        android:id="@+id/rating_wrap_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="별점 : " />
+                        <RatingBar
+                            android:id="@+id/ratingBar"
+                            style="?android:attr/ratingBarStyleIndicator"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:numStars="5"
+                            android:rating="0"
+                            android:stepSize="0.5"
+                            android:isIndicator="false"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/confirmButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="리뷰 남기기"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:text="@string/large_text" />
+
+
+                </LinearLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </LinearLayout>
+
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>
