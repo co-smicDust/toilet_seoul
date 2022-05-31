@@ -6,6 +6,10 @@
                 Menu items with icon and Title
         -->
         <item
+            android:id="@+id/go_to_main"
+            android:icon="@drawable/home"
+            android:title="지도 화면으로"/>
+        <item
             android:id="@+id/first"
             android:icon="@drawable/ic_personal"
             android:title="개인 정보 수정" />
