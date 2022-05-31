@@ -3,10 +3,7 @@ package com.example.toilet_seoul
 import android.R
 import android.os.Bundle
 import android.view.*
-<<<<<<< HEAD
 import androidx.appcompat.app.AppCompatActivity
-=======
->>>>>>> origin/MapFragment
 import androidx.fragment.app.Fragment
 
 

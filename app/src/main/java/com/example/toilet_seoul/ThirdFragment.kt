@@ -23,9 +23,6 @@ class ThirdFragment : Fragment(), MainActivity.onBackPressedListener {
         requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
         //requireActivity().supportFragmentManager.popBackStack()
     }
-<<<<<<< HEAD
 }
 
-=======
-}
->>>>>>> origin/MapFragment
+
