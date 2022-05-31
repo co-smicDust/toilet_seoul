@@ -1,18 +1,25 @@
 package com.example.toilet_seoul
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 
-class FirstFragment : Fragment() {
+
+class FirstFragment : Fragment(), MainActivity.onBackPressedListener {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.personal_information, container, false)
+        //setHasOptionsMenu(true)
+        //(activity as AppCompatActivity).supportActionBar?.title = "My Title"
+        return inflater.inflate(com.example.toilet_seoul.R.layout.personal_information, container, false)
+    }
+
+    override fun onBackPressed() {
+        requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
+        //requireActivity().supportFragmentManager.popBackStack()
     }
 }
