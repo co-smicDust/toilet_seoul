@@ -26,7 +26,7 @@
             android:required="false"/>
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBwMhV8MfLrDgVWKoLLsXMMYV1RsyBCg6U"/>
+            android:value="AIzaSyD0wCOmS2wMPJhCniM3QHrPYCYsf0szJmU"/>
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
 
@@ -48,32 +48,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".edit_information"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <!--category android:name="android.intent.category.LAUNCHER" !-->
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".edit_contact"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <!--category android:name="android.intent.category.LAUNCHER" !-->
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".edit_option"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <!--category android:name="android.intent.category.LAUNCHER" !-->
-            </intent-filter>
-        </activity>
 
     </application>
 
