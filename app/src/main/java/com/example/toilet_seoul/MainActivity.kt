@@ -15,12 +15,10 @@ import android.os.Looper
 import android.os.Message
 import android.util.Log
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -30,7 +28,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -38,6 +35,7 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,6 +58,11 @@ class MainActivity : AppCompatActivity() {
 
     // 구글 맵 객체를 참조할 멤버 변수
     var googleMap: GoogleMap? = null
+
+    //뒤로가기 Listener역할을 할 Interface 생성
+    interface onBackPressedListener {
+        fun onBackPressed()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -217,7 +220,7 @@ class MainActivity : AppCompatActivity() {
     inner class ToiletThread : Thread() {
         override fun run() {
             val API_KEY =
-                "dbfTaH38sAn%2BuSkkba91GDEz5yXxlSyQmXg3si7fYYhixama3C8TPxXHwhq%2BPtntBSA8NXikhNlIE4qcLjx42w%3D%3D"
+                "g5i7qJn8Mi5NKv%2FXkSxItQQmoXGzQfgjtj0UdKXYURG4OfE%2BOS%2BxD17cMRFYH22ISNcxiTJw68PboMhNllrnWA%3D%3D"
 
             //데이터의 시작과 종료 인덱스
             var pageNo = 193
@@ -376,5 +379,27 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    //fragment에서 상속 - 뒤로가기
+    //프레그먼트에서 뒤로가기 한번 누르면 메인액티비티(지도화면)으로
+    private var backPressedTime : Long = 0
+    override fun onBackPressed() {
+        val fragmentList = supportFragmentManager.fragments
+        for (fragment in fragmentList) {
+            if (fragment is onBackPressedListener) {
+                (fragment as onBackPressedListener).onBackPressed()
+                return
+            }
+        }
+        //두 번 클릭시 어플 종료
+        // 2초내 다시 클릭하면 앱 종료
+        if (System.currentTimeMillis() - backPressedTime < 2000) {
+            finish()
+            return
+        }
+        // 처음 클릭 메시지
+        Toast.makeText(this, "'뒤로' 버튼을 한번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
+        backPressedTime = System.currentTimeMillis()
     }
 }
