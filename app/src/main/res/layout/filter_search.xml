@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.example.toilet_seoul.ThirdFragment">
     <!--TextView
         android:layout_width="match_parent"
@@ -10,4 +11,43 @@
         android:gravity="center"
         android:text="Third Fragment"
         android:textSize="25sp" !-->
+
+    //예시화면-추후 수정
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="화장실 옵션을 선택하세요" />
+
+        <CheckBox
+            android:id="@+id/cb1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="남녀공용" />
+
+        <CheckBox
+            android:id="@+id/cb2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="비상벨 설치" />
+
+        <CheckBox
+            android:id="@+id/cb3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="어쩌구" />
+
+        <CheckBox
+            android:id="@+id/cb4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="저쩌구" />
+
+    </LinearLayout>
 </FrameLayout>

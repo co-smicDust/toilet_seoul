@@ -40,9 +40,4 @@
     <color name="yellow_A200">#FFFF00</color>
     <color name="yellow_A400">#FFEA00</color>
     <color name="yellow_A700">#FFD600</color>
-
-    <color name="googleSignIn">#d34836</color>
-    <color name="googleSignInPressed">#b02513</color>
-    <color name="emailSignIn">#009688</color>
-    <color name="emailSignInPressed">#004d40</color>
 </resources>

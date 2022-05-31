@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.example.toilet_seoul.SecondFragment">
     <!--TextView
         android:layout_width="match_parent"
@@ -10,4 +11,23 @@
         android:gravity="center"
         android:text="Second Fragment"
         android:textSize="25sp" !-->
+
+    //예시화면-추후 수정
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+    <EditText android:id="@+id/contactEdt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="추가할 전화번호 입력"
+        android:inputType="phone"/>
+
+    <Button android:id="@+id/addBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="추가"/>
+
+    </LinearLayout>
 </FrameLayout>
