@@ -30,9 +30,15 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 class MapFragment : Fragment(), OnMapReadyCallback {
+
+    lateinit var database: DatabaseReference
+
     var rootView: View? = null
     var mapView: MapView? = null
 
@@ -201,8 +207,11 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     //다운로드 받아서 파싱할 스레드
     inner class ToiletThread : Thread() {
         override fun run() {
+
+            val toiletRef = Firebase.database.reference.child("toilet")
+
             val API_KEY =
-                "g5i7qJn8Mi5NKv%2FXkSxItQQmoXGzQfgjtj0UdKXYURG4OfE%2BOS%2BxD17cMRFYH22ISNcxiTJw68PboMhNllrnWA%3D%3D"
+                "dbfTaH38sAn%2BuSkkba91GDEz5yXxlSyQmXg3si7fYYhixama3C8TPxXHwhq%2BPtntBSA8NXikhNlIE4qcLjx42w%3D%3D"
 
             //데이터의 시작과 종료 인덱스
             var pageNo = 193

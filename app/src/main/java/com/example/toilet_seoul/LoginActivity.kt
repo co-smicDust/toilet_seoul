@@ -97,7 +97,7 @@ class LoginActivity : AppCompatActivity() {
         var credential = FacebookAuthProvider.getCredential(token?.token!!)
         auth?.signInWithCredential(credential)
             ?.addOnCompleteListener {
-                task ->
+                    task ->
                 if(task.isSuccessful){
                     //Login
                     moveMainPage(task.result?.user)
@@ -134,7 +134,7 @@ class LoginActivity : AppCompatActivity() {
                 //예외처리
             }
 
-    }
+        }
 
     //이메일 계정 생성
     fun signinAndSignup() {
@@ -170,10 +170,22 @@ class LoginActivity : AppCompatActivity() {
     //메인화면으로 이동 => 수정필요
     fun moveMainPage(user: FirebaseUser?) {
         if (user != null) {
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, RealtimeDB::class.java))
         }
     }
     /* 위 함수가 수정 되면 manifest <application>에 추가
+    <activity
+android:name=".MainActivity"
+android:exported="true">
+</activity>
+<activity
+android:name=".DangerCall"
+android:exported="true">
+<intent-filter>
+    <action android:name="android.intent.action.MAIN" />
+    <!-- category android:name="android.intent.category.LAUNCHER" ! -->
+</intent-filter>
+</activity>
     <activity
             android:name=".LoginActivity"
             android:exported="true">
