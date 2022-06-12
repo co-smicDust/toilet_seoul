@@ -15,8 +15,9 @@ class DangerCall : AppCompatActivity() {
 
         findViewById<Button>(R.id.dialBtn).setOnClickListener {
 
-            val input = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
-            val myUri = Uri.parse("tel:${input}")
+            //val input = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
+            //val myUri = Uri.parse("tel:${input}")
+            val myUri = Uri.parse("tel:01012345678") //데이터베이스 연결 전 임의로
             val myIntent = Intent(Intent.ACTION_DIAL, myUri)
             startActivity(myIntent)
         }
@@ -47,8 +48,9 @@ class DangerCall : AppCompatActivity() {
 
 
         findViewById<Button>(R.id.smsBtn).setOnClickListener {
-            val inputPhoneNum = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
-            val myUri = Uri.parse("smsto:${inputPhoneNum}")
+            //val inputPhoneNum = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
+            //val myUri = Uri.parse("smsto:${inputPhoneNum}")
+            val myUri = Uri.parse("smsto:01012345678") //데이터베이스 연결 전 임의로
             val myIntent = Intent(Intent.ACTION_SENDTO, myUri)
             // 문자 전송 화면 이동 시 미리 문구를 적어서 보내기
             // myIntent를 가지고 갈 때 -> putExtra로 데이터를 담아서 보내자
