@@ -15,8 +15,9 @@ class DangerCall : AppCompatActivity() {
 
         findViewById<Button>(R.id.dialBtn).setOnClickListener {
 
-            val input = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
-            val myUri = Uri.parse("tel:${input}")
+            //val input = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
+            //val myUri = Uri.parse("tel:${input}")
+            val myUri = Uri.parse("tel:01012345678") //데이터베이스 연결 전 임의로
             val myIntent = Intent(Intent.ACTION_DIAL, myUri)
             startActivity(myIntent)
         }
@@ -31,13 +32,10 @@ class DangerCall : AppCompatActivity() {
                     val myIntent = Intent(Intent.ACTION_CALL, myUri)
                     startActivity(myIntent)
                 }
-
                 override fun onPermissionDenied(deniedPermissions: MutableList<String>?) {
                     Toast.makeText(mContext, "전화 연결 권한이 거부되었습니다.", Toast.LENGTH_SHORT).show()
                 }
-
             }
-
             TedPermission.with(mContext)
                 .setPermissionListener(permissionListener)
                 .setDeniedMessage("[설정] 에서 권한을 열어줘야 전화 연결이 가능합니다.")
@@ -47,8 +45,9 @@ class DangerCall : AppCompatActivity() {
 
 
         findViewById<Button>(R.id.smsBtn).setOnClickListener {
-            val inputPhoneNum = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
-            val myUri = Uri.parse("smsto:${inputPhoneNum}")
+            //val inputPhoneNum = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
+            //val myUri = Uri.parse("smsto:${inputPhoneNum}")
+            val myUri = Uri.parse("smsto:01012345678") //데이터베이스 연결 전 임의로
             val myIntent = Intent(Intent.ACTION_SENDTO, myUri)
             // 문자 전송 화면 이동 시 미리 문구를 적어서 보내기
             // myIntent를 가지고 갈 때 -> putExtra로 데이터를 담아서 보내자

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -78,6 +79,8 @@ class BottomSheet : BottomSheetDialogFragment() {
             val intent = Intent(getContext(), DangerCall::class.java)
             startActivity(intent)
         }
+
+        view?.findViewById<TextView>(R.id.toiletNm)?.setText(MapFragment().toiletNm)
     }
 
     override fun onStart() {
