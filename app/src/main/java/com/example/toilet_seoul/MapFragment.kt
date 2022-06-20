@@ -2,7 +2,6 @@ package com.example.toilet_seoul
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -14,32 +13,22 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.URL
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.Marker
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import com.google.maps.android.collections.MarkerManager
+
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -67,22 +56,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     // 구글 맵 객체를 참조할 멤버 변수
     var googleMap: GoogleMap? = null
-
-    var target:String? = null
-
-    var toiletNm: String? = null
-    val rdnmadr: String? = null
-
-    /*val lnmadr: String? = null, val unisexToiletYn: String? = null,
-    val menToiletBowlNumber: Int? = null, val menUrineNumber: Int? = null, val menHandicapToiletBowlNumber: Int? = null,
-    val menHandicapUrinalNumber: Int? = null, val menChildrenToiletBowlNumber: Int? = null, val menChildrenUrinalNumber: Int? = null,
-    val ladiesToiletBowlNumber: Int? = null, val ladiesHandicapToiletBowlNumber: Int? = null, val ladiesChildrenToiletBowlNumber: Int? = null,
-    val phoneNumber: String? = null, val openTime: String? = null, val latitude: Double? = null, val longitude: Double? = null,
-    val emgBellYn: String? = null, val enterentCctvYn: String? = null, val dipersExchgPosi: String? = null*/
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -139,7 +112,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // 맵 초기화
@@ -245,9 +218,52 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 toiletRef.child(i.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                        map["target"] = i.toString()
                         map["toiletNm"] = dataSnapshot.child("toiletNm").value as String
                         map["lnmadr"] = dataSnapshot.child("lnmadr").value as String
+
+                        map["rdnmadr"] = dataSnapshot.child("rdnmadr").value as String
+                        map["unisexToiletYn"] = dataSnapshot.child("unisexToiletYn").value as String
+                        map["phoneNumber"] = dataSnapshot.child("phoneNumber").value as String
+                        map["openTime"] = dataSnapshot.child("openTime").value as String
+                        map["emgBellYn"] = dataSnapshot.child("emgBellYn").value as String
+                        map["enterentCctvYn"] = dataSnapshot.child("enterentCctvYn").value as String
+                        map["dipersExchgPosi"] = dataSnapshot.child("dipersExchgPosi").value as String
+
+                        val mb = dataSnapshot.child("menToiletBowlNumber").value
+                        if (mb != null)
+                            map["menToiletBowlNumber"] = mb.toString()
+
+                        val mu = dataSnapshot.child("menUrineNumber").value
+                        if (mu != null)
+                            map["menUrineNumber"] = mu.toString()
+
+                        val mhb = dataSnapshot.child("menHandicapToiletBowlNumber").value
+                        if (mhb != null)
+                            map["menHandicapToiletBowlNumber"] = mhb.toString()
+
+                        val mhu = dataSnapshot.child("menHandicapUrinalNumber").value
+                        if (mhu != null)
+                            map["menHandicapUrinalNumber"] = mhu.toString()
+
+                        val mcb = dataSnapshot.child("menChildrenToiletBowlNumber").value
+                        if (mcb != null)
+                            map["menChildrenToiletBowlNumber"] = mcb.toString()
+
+                        val mcu = dataSnapshot.child("menChildrenUrinalNumber").value
+                        if (mcu != null)
+                            map["menChildrenUrinalNumber"] = mcu.toString()
+
+                        val lb = dataSnapshot.child("ladiesToiletBowlNumber").value
+                        if (lb != null)
+                            map["ladiesToiletBowlNumber"] = lb.toString()
+
+                        val lhb = dataSnapshot.child("ladiesHandicapToiletBowlNumber").value
+                        if (lhb != null)
+                            map["ladiesHandicapToiletBowlNumber"] = lhb.toString()
+
+                        val lcb = dataSnapshot.child("ladiesChildrenToiletBowlNumber").value
+                        if (lcb != null)
+                            map["ladiesChildrenToiletBowlNumber"] = lcb.toString()
 
                         val lat = dataSnapshot.child("latitude").value
                         val lon = dataSnapshot.child("longitude").value
@@ -273,7 +289,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     fun addMarkers(toilet: MutableMap<String, Any>) {
         // 맵이 직접 마커를 생성 - 작은 지역에 마커가 많으면 보기가 안좋습니다.
         // 마커 누르면 하단시트
-        googleMap?.addMarker(
+        val marker: Marker? = googleMap?.addMarker(
             MarkerOptions()
                 .position(LatLng(toilet["latitude"] as Double, toilet["longitude"] as Double))
                 .title(toilet["toiletNm"] as String)
@@ -281,13 +297,59 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 .snippet(toilet["lnmadr"] as String)
         )
 
-        googleMap?.setOnMarkerClickListener(GoogleMap.OnMarkerClickListener { marker -> // TODO Auto-generated method stub
+        marker?.tag =
+            toilet["rdnmadr"] as String + "/" +
+                    toilet["unisexToiletYn"] as String + "/" +
+                    toilet["phoneNumber"] as String + "/" +
+                    toilet["openTime"] as String + "/" +
+                    toilet["emgBellYn"] as String + "/" +
+                    toilet["enterentCctvYn"] as String + "/" +
+                    toilet["dipersExchgPosi"] as String + "/" +
+
+                    toilet["menToiletBowlNumber"] as String + "/" +
+                    toilet["menUrineNumber"] as String + "/" +
+                    toilet["menHandicapToiletBowlNumber"] as String + "/" +
+                    toilet["menHandicapUrinalNumber"] as String + "/" +
+                    toilet["menChildrenToiletBowlNumber"] as String + "/" +
+                    toilet["menChildrenUrinalNumber"] as String + "/" +
+                    toilet["ladiesToiletBowlNumber"] as String + "/" +
+                    toilet["ladiesHandicapToiletBowlNumber"] as String + "/" +
+                    toilet["ladiesChildrenToiletBowlNumber"] as String
+        Log.d("detail", toilet["rdnmadr"] as String as String)
+
+        googleMap?.setOnMarkerClickListener(GoogleMap.OnMarkerClickListener { // TODO Auto-generated method stub
+
             if (true) {
                 val bottomSheet = BottomSheet()
+
+                var arr = marker?.tag.toString().split("/") //마커에 붙인 태그
+                val args = Bundle()
+                args.putString("toiletNm", it.title.toString())
+                args.putString("rdnmadr", arr[0])
+                args.putString("lnmadr", it.snippet.toString())
+                args.putString("unisexToiletYn", arr[1])
+                args.putString("menToiletBowlNumber", arr[7])
+                args.putString("menUrineNumber", arr[8])
+                args.putString("menHandicapToiletBowlNumber", arr[9])
+                args.putString("menHandicapUrinalNumber", arr[10])
+                args.putString("menChildrenToiletBowlNumber", arr[11])
+                args.putString("menChildrenUrinalNumber", arr[12])
+                args.putString("ladiesToiletBowlNumber", arr[13])
+                args.putString("ladiesHandicapToiletBowlNumber", arr[14])
+                args.putString("ladiesChildrenToiletBowlNumber", arr[15])
+                args.putString("phoneNumber", arr[2])
+                args.putString("openTime", arr[3])
+                args.putString("position", it.position.toString())
+                args.putString("emgBellYn", arr[4])
+                args.putString("enterentCctvYn", arr[5])
+                args.putString("dipersExchgPosi", arr[6])
+
+                bottomSheet.arguments = args
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+
                 googleMap?.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(marker.position, DEFAULT_ZOOM_LEVEL))
-                toiletNm = toilet["latitude"].toString()
+                    CameraUpdateFactory.newLatLngZoom(it.position, DEFAULT_ZOOM_LEVEL))
+
                 return@OnMarkerClickListener true
             }
             false
