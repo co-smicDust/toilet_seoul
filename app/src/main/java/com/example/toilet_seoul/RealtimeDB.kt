@@ -5,22 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 import kotlin.concurrent.thread
-
-data class Toilet(val toiletNm: String? = null, val rdnmadr: String? = null, val lnmadr: String? = null, val unisexToiletYn: String? = null,
-                  val menToiletBowlNumber: Int? = null, val menUrineNumber: Int? = null, val menHandicapToiletBowlNumber: Int? = null,
-                  val menHandicapUrinalNumber: Int? = null, val menChildrenToiletBowlNumber: Int? = null, val menChildrenUrinalNumber: Int? = null,
-                  val ladiesToiletBowlNumber: Int? = null, val ladiesHandicapToiletBowlNumber: Int? = null, val ladiesChildrenToiletBowlNumber: Int? = null,
-                  val phoneNumber: String? = null, val openTime: String? = null, val latitude: Double? = null, val longitude: Double? = null,
-                  val emgBellYn: String? = null, val enterentCctvYn: String? = null, val dipersExchgPosi: String? = null) {
-
-}
 
 class RealtimeDB : AppCompatActivity() {
 

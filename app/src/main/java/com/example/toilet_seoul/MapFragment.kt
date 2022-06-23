@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,13 +28,15 @@ import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
 class MapFragment : Fragment(), OnMapReadyCallback {
 
     val database: DatabaseReference = Firebase.database.reference
 
     var rootView: View? = null
     var mapView: MapView? = null
+
+    var toilet: Toilet? = null
+    val ARG_TOILET = "argToilet"
 
     // 런타임에서 권한이 필요한 퍼미션 목록
     val PERMISSIONS = arrayOf(
@@ -57,6 +58,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // 구글 맵 객체를 참조할 멤버 변수
     var googleMap: GoogleMap? = null
 
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -68,9 +70,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return rootView
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        view?.findViewById<FloatingActionButton>(R.id.myLocationButton)?.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.findViewById<FloatingActionButton>(R.id.myLocationButton)?.setOnClickListener {
             when {
                 hasPermissions() -> googleMap?.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(getMyLocation(), DEFAULT_ZOOM_LEVEL)
@@ -196,13 +199,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     //DB의 toilet reference
     val toiletRef = database.child("toilet")
 
-    val map = mutableMapOf<String, Any>()
-
-
-    //데이터의 전체 개수를 저장하기 위한 프로퍼티
-    var numOfRows = 100
-
-    //var count = 350
+    var map = mutableMapOf<String, Any?>()
 
     inner class ToiletThread : Thread() {
         override fun run() {
@@ -214,79 +211,30 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     val handler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
 
-            for (i in 0 until numOfRows) {
-                toiletRef.child(i.toString()).addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+            toiletRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
 
-                        map["toiletNm"] = dataSnapshot.child("toiletNm").value as String
-                        map["lnmadr"] = dataSnapshot.child("lnmadr").value as String
-
-                        map["rdnmadr"] = dataSnapshot.child("rdnmadr").value as String
-                        map["unisexToiletYn"] = dataSnapshot.child("unisexToiletYn").value as String
-                        map["phoneNumber"] = dataSnapshot.child("phoneNumber").value as String
-                        map["openTime"] = dataSnapshot.child("openTime").value as String
-                        map["emgBellYn"] = dataSnapshot.child("emgBellYn").value as String
-                        map["enterentCctvYn"] = dataSnapshot.child("enterentCctvYn").value as String
-                        map["dipersExchgPosi"] = dataSnapshot.child("dipersExchgPosi").value as String
-
-                        val mb = dataSnapshot.child("menToiletBowlNumber").value
-                        if (mb != null)
-                            map["menToiletBowlNumber"] = mb.toString()
-
-                        val mu = dataSnapshot.child("menUrineNumber").value
-                        if (mu != null)
-                            map["menUrineNumber"] = mu.toString()
-
-                        val mhb = dataSnapshot.child("menHandicapToiletBowlNumber").value
-                        if (mhb != null)
-                            map["menHandicapToiletBowlNumber"] = mhb.toString()
-
-                        val mhu = dataSnapshot.child("menHandicapUrinalNumber").value
-                        if (mhu != null)
-                            map["menHandicapUrinalNumber"] = mhu.toString()
-
-                        val mcb = dataSnapshot.child("menChildrenToiletBowlNumber").value
-                        if (mcb != null)
-                            map["menChildrenToiletBowlNumber"] = mcb.toString()
-
-                        val mcu = dataSnapshot.child("menChildrenUrinalNumber").value
-                        if (mcu != null)
-                            map["menChildrenUrinalNumber"] = mcu.toString()
-
-                        val lb = dataSnapshot.child("ladiesToiletBowlNumber").value
-                        if (lb != null)
-                            map["ladiesToiletBowlNumber"] = lb.toString()
-
-                        val lhb = dataSnapshot.child("ladiesHandicapToiletBowlNumber").value
-                        if (lhb != null)
-                            map["ladiesHandicapToiletBowlNumber"] = lhb.toString()
-
-                        val lcb = dataSnapshot.child("ladiesChildrenToiletBowlNumber").value
-                        if (lcb != null)
-                            map["ladiesChildrenToiletBowlNumber"] = lcb.toString()
-
-                        val lat = dataSnapshot.child("latitude").value
-                        val lon = dataSnapshot.child("longitude").value
-                        if (lat != null && lon != null) {
-                            map["latitude"] = lat as Double
-                            map["longitude"] = lon as Double
-
-                            addMarkers(map)
+                    if (dataSnapshot.exists()) {
+                        // looping through to values
+                        for (i in dataSnapshot.children) {
+                            toilet = i.getValue(Toilet::class.java)
+                            map = toilet!!.toMap()
+                            if(map["latitude"] != null || map["longtitude"] != null)
+                                addMarkers(map)
                         }
-
                     }
 
-                    override fun onCancelled(databaseError: DatabaseError) {}
-                })
+                }
 
-            }
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
 
         }
     }
 
     // 마커를 추가하는 함수
     @SuppressLint("PotentialBehaviorOverride")
-    fun addMarkers(toilet: MutableMap<String, Any>) {
+    fun addMarkers(toilet: MutableMap<String, Any?>) {
         // 맵이 직접 마커를 생성 - 작은 지역에 마커가 많으면 보기가 안좋습니다.
         // 마커 누르면 하단시트
         val marker: Marker? = googleMap?.addMarker(
@@ -306,23 +254,23 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     toilet["enterentCctvYn"] as String + "/" +
                     toilet["dipersExchgPosi"] as String + "/" +
 
-                    toilet["menToiletBowlNumber"] as String + "/" +
-                    toilet["menUrineNumber"] as String + "/" +
-                    toilet["menHandicapToiletBowlNumber"] as String + "/" +
-                    toilet["menHandicapUrinalNumber"] as String + "/" +
-                    toilet["menChildrenToiletBowlNumber"] as String + "/" +
-                    toilet["menChildrenUrinalNumber"] as String + "/" +
-                    toilet["ladiesToiletBowlNumber"] as String + "/" +
-                    toilet["ladiesHandicapToiletBowlNumber"] as String + "/" +
-                    toilet["ladiesChildrenToiletBowlNumber"] as String
-        Log.d("detail", toilet["rdnmadr"] as String as String)
+                    toilet["menToiletBowlNumber"].toString() + "/" +
+                    toilet["menUrineNumber"].toString() + "/" +
+                    toilet["menHandicapToiletBowlNumber"].toString() + "/" +
+                    toilet["menHandicapUrinalNumber"].toString() + "/" +
+                    toilet["menChildrenToiletBowlNumber"].toString() + "/" +
+                    toilet["menChildrenUrinalNumber"].toString() + "/" +
+                    toilet["ladiesToiletBowlNumber"].toString() + "/" +
+                    toilet["ladiesHandicapToiletBowlNumber"].toString() + "/" +
+                    toilet["ladiesChildrenToiletBowlNumber"].toString()
 
         googleMap?.setOnMarkerClickListener(GoogleMap.OnMarkerClickListener { // TODO Auto-generated method stub
 
             if (true) {
+
                 val bottomSheet = BottomSheet()
 
-                var arr = marker?.tag.toString().split("/") //마커에 붙인 태그
+                var arr = it.tag.toString().split("/") //마커에 붙인 태그
                 val args = Bundle()
                 args.putString("toiletNm", it.title.toString())
                 args.putString("rdnmadr", arr[0])
