@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.maps.android.collections.MarkerManager
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -36,7 +38,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     var mapView: MapView? = null
 
     var toilet: Toilet? = null
-    val ARG_TOILET = "argToilet"
 
     // 런타임에서 권한이 필요한 퍼미션 목록
     val PERMISSIONS = arrayOf(
@@ -57,6 +58,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     // 구글 맵 객체를 참조할 멤버 변수
     var googleMap: GoogleMap? = null
+
+    val bottomSheet = BottomSheet()
 
     @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateView(
@@ -147,6 +150,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         mapView?.getMapAsync {
             // 구글맵 멤버 변수에 구글맵 객체 저장
             googleMap = it
+
             // 현재위치로 이동 버튼 비활성화
             it.uiSettings.isMyLocationButtonEnabled = false
             // 위치 사용 권한이 있는 경우
@@ -167,6 +171,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     it.moveCamera(CameraUpdateFactory.newLatLngZoom(CITY_HALL, DEFAULT_ZOOM_LEVEL))
                 }
             }
+            searching()
         }
     }
 
@@ -266,41 +271,35 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
         googleMap?.setOnMarkerClickListener(GoogleMap.OnMarkerClickListener { // TODO Auto-generated method stub
 
-            if (true) {
+            val arr = it.tag.toString().split("/") //마커에 붙인 태그
+            val args = Bundle()
+            args.putString("toiletNm", it.title.toString())
+            args.putString("rdnmadr", arr[0])
+            args.putString("lnmadr", it.snippet.toString())
+            args.putString("unisexToiletYn", arr[1])
+            args.putString("menToiletBowlNumber", arr[7])
+            args.putString("menUrineNumber", arr[8])
+            args.putString("menHandicapToiletBowlNumber", arr[9])
+            args.putString("menHandicapUrinalNumber", arr[10])
+            args.putString("menChildrenToiletBowlNumber", arr[11])
+            args.putString("menChildrenUrinalNumber", arr[12])
+            args.putString("ladiesToiletBowlNumber", arr[13])
+            args.putString("ladiesHandicapToiletBowlNumber", arr[14])
+            args.putString("ladiesChildrenToiletBowlNumber", arr[15])
+            args.putString("phoneNumber", arr[2])
+            args.putString("openTime", arr[3])
+            args.putString("position", it.position.toString())
+            args.putString("emgBellYn", arr[4])
+            args.putString("enterentCctvYn", arr[5])
+            args.putString("dipersExchgPosi", arr[6])
 
-                val bottomSheet = BottomSheet()
+            bottomSheet.arguments = args
+            bottomSheet.show(parentFragmentManager, bottomSheet.tag)
 
-                var arr = it.tag.toString().split("/") //마커에 붙인 태그
-                val args = Bundle()
-                args.putString("toiletNm", it.title.toString())
-                args.putString("rdnmadr", arr[0])
-                args.putString("lnmadr", it.snippet.toString())
-                args.putString("unisexToiletYn", arr[1])
-                args.putString("menToiletBowlNumber", arr[7])
-                args.putString("menUrineNumber", arr[8])
-                args.putString("menHandicapToiletBowlNumber", arr[9])
-                args.putString("menHandicapUrinalNumber", arr[10])
-                args.putString("menChildrenToiletBowlNumber", arr[11])
-                args.putString("menChildrenUrinalNumber", arr[12])
-                args.putString("ladiesToiletBowlNumber", arr[13])
-                args.putString("ladiesHandicapToiletBowlNumber", arr[14])
-                args.putString("ladiesChildrenToiletBowlNumber", arr[15])
-                args.putString("phoneNumber", arr[2])
-                args.putString("openTime", arr[3])
-                args.putString("position", it.position.toString())
-                args.putString("emgBellYn", arr[4])
-                args.putString("enterentCctvYn", arr[5])
-                args.putString("dipersExchgPosi", arr[6])
+            googleMap?.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(it.position, DEFAULT_ZOOM_LEVEL))
 
-                bottomSheet.arguments = args
-                bottomSheet.show(parentFragmentManager, bottomSheet.tag)
-
-                googleMap?.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(it.position, DEFAULT_ZOOM_LEVEL))
-
-                return@OnMarkerClickListener true
-            }
-            false
+            return@OnMarkerClickListener true
         })
     }
 
@@ -322,5 +321,44 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         super.onStop()
         toiletThread!!.isInterrupted
         toiletThread = null
+    }
+
+    fun searching(){
+        if (arguments != null && requireArguments().containsKey("toilet")) {
+
+            val toilet = arguments?.getSerializable("toilet") as Toilet
+            val searching = arguments?.getBoolean("searching")
+            val chosenPosition = LatLng(toilet.latitude!!, toilet.longitude!!)
+
+            if (searching == true){
+                googleMap?.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(chosenPosition, DEFAULT_ZOOM_LEVEL))
+
+                val args = Bundle()
+                args.putString("toiletNm", toilet.toiletNm)
+                args.putString("rdnmadr", toilet.rdnmadr)
+                args.putString("lnmadr", toilet.lnmadr)
+                args.putString("unisexToiletYn", toilet.unisexToiletYn)
+                args.putString("menToiletBowlNumber", toilet.menToiletBowlNumber.toString())
+                args.putString("menUrineNumber", toilet.menUrineNumber.toString())
+                args.putString("menHandicapToiletBowlNumber", toilet.menHandicapToiletBowlNumber.toString())
+                args.putString("menHandicapUrinalNumber", toilet.menHandicapUrinalNumber.toString())
+                args.putString("menChildrenToiletBowlNumber", toilet.menChildrenToiletBowlNumber.toString())
+                args.putString("menChildrenUrinalNumber", toilet.menChildrenUrinalNumber.toString())
+                args.putString("ladiesToiletBowlNumber", toilet.ladiesToiletBowlNumber.toString())
+                args.putString("ladiesHandicapToiletBowlNumber", toilet.ladiesHandicapToiletBowlNumber.toString())
+                args.putString("ladiesChildrenToiletBowlNumber", toilet.ladiesChildrenToiletBowlNumber.toString())
+                args.putString("phoneNumber", toilet.phoneNumber)
+                args.putString("openTime", toilet.openTime)
+                args.putString("position", chosenPosition.toString())
+                args.putString("emgBellYn", toilet.emgBellYn)
+                args.putString("enterentCctvYn", toilet.enterentCctvYn)
+                args.putString("dipersExchgPosi", toilet.dipersExchgPosi)
+
+                bottomSheet.arguments = args
+                bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+            }
+
+        }
     }
 }

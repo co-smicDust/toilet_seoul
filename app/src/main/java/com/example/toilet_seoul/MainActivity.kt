@@ -1,6 +1,8 @@
 package com.example.toilet_seoul
 
+import android.icu.lang.UProperty.AGE
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +12,12 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
+import java.lang.Boolean.FALSE
+
 
 class MainActivity : AppCompatActivity() {
+
+    private val mainFragment = MapFragment()
 
     //뒤로가기 Listener역할을 할 Interface 생성
     interface onBackPressedListener {
@@ -32,10 +38,30 @@ class MainActivity : AppCompatActivity() {
         setNavigationDrawer(); // call method
 
         if (savedInstanceState == null) {
-            val mainFragment = MapFragment()
+
             supportFragmentManager.beginTransaction()
                 .replace(R.id.frame, mainFragment)
                 .commit()
+        }
+
+        val bundle = intent.getBundleExtra("bundle")
+
+        if (bundle != null && bundle.containsKey("toilet")) {
+            val toilet = bundle.getSerializable("toilet") as Toilet
+            val clicked = bundle.getBoolean("clicked", FALSE)
+            val send = Bundle()
+            send.putSerializable("toilet", toilet)
+            send.putBoolean("searching", clicked)
+            Log.d("main", toilet.toString())
+            Log.d("main_clicked?", clicked.toString())
+
+            if (clicked){
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame, mainFragment)
+                    .commit()
+
+                mainFragment.arguments = send
+            }
         }
 
         //비상연락 버튼클릭이벤트 - DangerCall (원래는 상단바에 플로팅 버튼, 후기창으로 옮김)

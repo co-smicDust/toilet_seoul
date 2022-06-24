@@ -1,11 +1,16 @@
 package com.example.toilet_seoul
 
+import android.content.Intent
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.toilet_seoul.databinding.ToiletRowBinding
+import java.lang.Boolean.TRUE
 
 class ToiletAdapter(private val toiletList: List<Toilet>) : RecyclerView.Adapter<ToiletAdapter.ToiletHolder>() {
 
@@ -42,6 +47,14 @@ class ToiletAdapter(private val toiletList: List<Toilet>) : RecyclerView.Adapter
             itemBinding.tvName.text = toilet.toiletNm
             itemBinding.tvAddress.text = toilet.lnmadr
             itemBinding.tvUnisex.text = toilet.unisexToiletYn
+            itemBinding.viewOnMap.setOnClickListener {
+                val intent = Intent(it.context, MainActivity::class.java)
+                val bundle = Bundle()
+                bundle.putSerializable("toilet", toilet)
+                bundle.putBoolean("clicked", TRUE)
+                intent.putExtra("bundle", bundle)
+                it.context.startActivity(intent)
+            }
         }
     }
 }
