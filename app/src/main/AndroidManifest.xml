@@ -25,7 +25,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyC2uKyez8Jor1oxS8Ml59WP6H63z9ywF9s" />
+            android:value="AIzaSyBwMhV8MfLrDgVWKoLLsXMMYV1RsyBCg6U" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -34,7 +34,13 @@
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+
         <activity
             android:name=".DangerCall"
             android:exported="true">
@@ -43,18 +49,27 @@
                 <!-- category android:name="android.intent.category.LAUNCHER" ! -->
             </intent-filter>
         </activity>
+
         <activity
             android:name=".LoginActivity"
             android:exported="true">
-
-            //어플을 처음 실행시킬 때 로그인부터 시작
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
+
         <activity
             android:name=".RealtimeDB"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".QueryActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".AddActivity"
             android:exported="true">
         </activity>
 

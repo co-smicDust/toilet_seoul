@@ -3,18 +3,32 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/drawable/ic_trashcan.xml" value="0.1" />
         <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/activity_login.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/activity_query.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/activity_realtime_db.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/contact_add.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/contact_row.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/contact_setting.xml" value="0.2" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/danger_call.xml" value="0.25" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/filter_search.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/item_contact.xml" value="0.25" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/list_view.xml" value="0.1" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/list_view_item.xml" value="0.1" />
         <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/map_view.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/personal_information.xml" value="0.25" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/practice.xml" value="0.25364583333333335" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/row.xml" value="0.25" />
+        <entry key="..\:/Android-Sdk/toilet_seoul/app/src/main/res/layout/toilet_row.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/activity_login.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/activity_realtime_db.xml" value="0.11354166666666667" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/appbar.xml" value="0.10364583333333334" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/bottom_sheet.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/contact_setting.xml" value="0.10364583333333334" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/danger_call.xml" value="0.10364583333333334" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/filter_search.xml" value="0.10364583333333334" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/header.xml" value="0.10364583333333334" />
-        <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/map_view.xml" value="0.11354166666666667" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/personal_information.xml" value="0.10364583333333334" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/layout/search_bar.xml" value="0.1" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/menu/menu_list.xml" value="0.10364583333333334" />

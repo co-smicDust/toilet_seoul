@@ -1,9 +1,7 @@
 package com.example.toilet_seoul
 
-import android.R
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
 
@@ -23,5 +21,10 @@ class FirstFragment : Fragment(), MainActivity.onBackPressedListener {
     override fun onBackPressed() {
         requireActivity().supportFragmentManager.beginTransaction().remove(this).commit()
         //requireActivity().supportFragmentManager.popBackStack()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
     }
 }

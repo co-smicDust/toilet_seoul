@@ -1,10 +1,13 @@
 package com.example.toilet_seoul
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +22,6 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.android.synthetic.main.activity_login.*
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
 import java.util.*
@@ -36,19 +38,19 @@ class LoginActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         //이메일 로그인 버튼
-        email_login_btn.setOnClickListener {
+        findViewById<Button>(R.id.email_login_btn).setOnClickListener {
             //이메일 로그인 버튼 누르면 로그인 과정 실행
             signinAndSignup()
         }
 
         //구글계정 로그인 버튼
-        google_signin_btn.setOnClickListener {
+        findViewById<Button>(R.id.google_signin_btn).setOnClickListener {
             //구글 로그인 버튼 누르면 로그인 과정 실행
             activityLauncher.launch(signInIntent)
         }
 
         //페이스북계정 로그인 버튼
-        facebook_signin_btn.setOnClickListener {
+        findViewById<Button>(R.id.facebook_signin_btn).setOnClickListener {
             //페이스북 로그인 버튼 누르면 로그인 과정 실행
             facebookLogin()
         }
@@ -63,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     //페이스북 로그인
+    @SuppressLint("PackageManagerGetSignatures")
     fun printHashKey() {
         try {
             val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
@@ -138,7 +141,7 @@ class LoginActivity : AppCompatActivity() {
 
     //이메일 계정 생성
     fun signinAndSignup() {
-        auth?.createUserWithEmailAndPassword(email_et.text.toString(), password_et.text.toString())
+        auth?.createUserWithEmailAndPassword(findViewById<EditText>(R.id.email_et).text.toString(), findViewById<EditText>(R.id.password_et).text.toString())
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     //아이디가 생성
@@ -155,7 +158,7 @@ class LoginActivity : AppCompatActivity() {
 
     //이메일 계정 로그인
     fun signinEmail() {
-        auth?.signInWithEmailAndPassword(email_et.text.toString(), password_et.text.toString())
+        auth?.signInWithEmailAndPassword(findViewById<EditText>(R.id.email_et).text.toString(), findViewById<EditText>(R.id.password_et).text.toString())
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     //로그인 성공
@@ -173,28 +176,5 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RealtimeDB::class.java))
         }
     }
-    /* 위 함수가 수정 되면 manifest <application>에 추가
-    <activity
-android:name=".MainActivity"
-android:exported="true">
-</activity>
-<activity
-android:name=".DangerCall"
-android:exported="true">
-<intent-filter>
-    <action android:name="android.intent.action.MAIN" />
-    <!-- category android:name="android.intent.category.LAUNCHER" ! -->
-</intent-filter>
-</activity>
-    <activity
-            android:name=".LoginActivity"
-            android:exported="true">
 
-            //어플을 처음 실행시킬 때 로그인부터 시작
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    */
 }

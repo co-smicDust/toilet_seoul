@@ -12,35 +12,31 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
-import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.URL
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
 class MapFragment : Fragment(), OnMapReadyCallback {
 
-    lateinit var database: DatabaseReference
+    val database: DatabaseReference = Firebase.database.reference
 
     var rootView: View? = null
     var mapView: MapView? = null
+
+    var toilet: Toilet? = null
+    val ARG_TOILET = "argToilet"
 
     // 런타임에서 권한이 필요한 퍼미션 목록
     val PERMISSIONS = arrayOf(
@@ -62,10 +58,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // 구글 맵 객체를 참조할 멤버 변수
     var googleMap: GoogleMap? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+    @Suppress("OVERRIDE_DEPRECATION")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -77,9 +70,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         return rootView
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        view?.findViewById<FloatingActionButton>(R.id.myLocationButton)?.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        view.findViewById<FloatingActionButton>(R.id.myLocationButton)?.setOnClickListener {
             when {
                 hasPermissions() -> googleMap?.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(getMyLocation(), DEFAULT_ZOOM_LEVEL)
@@ -116,11 +110,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             // 권한 요청
             requestPermissions(PERMISSIONS, REQUEST_PERMISSION_CODE)
         }
+
     }
 
     override fun onRequestPermissionsResult(
         requestCode: Int, permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         // 맵 초기화
@@ -133,7 +128,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         for (permission in PERMISSIONS) {
             if (context?.let {
                     ActivityCompat.checkSelfPermission(
-                        it?.applicationContext,
+                        it.applicationContext,
                         permission
                     )
                 } != PackageManager.PERMISSION_GRANTED
@@ -193,9 +188,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-    //화장실의 위도와 경도 및 이름 들을 저장할 Map 의 List 생성
-    var toiletList: MutableList<Map<String, Any>> = mutableListOf<Map<String, Any>>()
-
     // 화장실 이미지로 사용할 Bitmap
     // Lazy 는 바로 생성하지 않고 처음 사용 될 때 생성하는 문법
     val bitmap by lazy {
@@ -203,70 +195,14 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         Bitmap.createScaledBitmap(drawable.bitmap, 64, 64, false)
     }
 
-    // Open API 다운로드 받는 스레드
-    //다운로드 받아서 파싱할 스레드
+
+    //DB의 toilet reference
+    val toiletRef = database.child("toilet")
+
+    var map = mutableMapOf<String, Any?>()
+
     inner class ToiletThread : Thread() {
         override fun run() {
-
-            val toiletRef = Firebase.database.reference.child("toilet")
-
-            val API_KEY =
-                "dbfTaH38sAn%2BuSkkba91GDEz5yXxlSyQmXg3si7fYYhixama3C8TPxXHwhq%2BPtntBSA8NXikhNlIE4qcLjx42w%3D%3D"
-
-            //데이터의 시작과 종료 인덱스
-            var pageNo = 193
-            //과천만
-            var numOfRows = 100
-            //데이터의 전체 개수를 저장하기 위한 프로퍼티
-            //var count = 350
-
-            do {
-                //파싱할 URL 생성
-                var url =
-                    URL(
-                        "http://api.data.go.kr/openapi/tn_pubr_public_toilet_api?serviceKey=" + API_KEY + "&pageNo=" + pageNo + "&numOfRows=" + numOfRows + "&type=json"
-                    )
-                //연결해서 문자열 가져오기
-                val connection = url.openConnection()
-                val data = connection.getInputStream()
-                var isr = InputStreamReader(data)
-                // br: 라인 단위로 데이터를 읽어오기 위해서 만듦
-                var br = BufferedReader(isr)
-
-                // Json 문서는 일단 문자열로 데이터를 모두 읽어온 후, Json에 관련된 객체를 만들어서 데이터를 가져옴
-                var str: String? = null
-                var buf = StringBuffer()
-
-                do {
-                    str = br.readLine()
-
-                    if (str != null) {
-                        buf.append(str)
-                    }
-                } while (str != null)
-
-
-                //JSON 파싱
-                // 전체가 객체로 묶여있기 때문에 객체형태로 가져옴
-                val root = JSONObject(buf.toString())
-                val response = root.getJSONObject("response")
-                val body = response.getJSONObject("body")
-                val items = body.getJSONArray("items") // 객체 안에 있는 item이라는 이름의 리스트를 가져옴
-
-
-                for (i in 0 until items.length()) {
-                    val obj = items.getJSONObject(i)
-                    val map = mutableMapOf<String, Any>()
-                    map.put("toiletNm", obj.getString("toiletNm"))
-                    map.put("lnmadr", obj.getString("lnmadr"))
-                    map.put("Lat", obj.optDouble("latitude"))
-                    map.put("Lng", obj.optDouble("longitude"))
-                    toiletList.add(map)
-
-                }
-                //인덱스를 변경해서 데이터 계속 가져오기
-                pageNo = pageNo + 1
-            } while (pageNo < 194) //일단 과천만 표시하려고
             handler.sendEmptyMessage(0)
         }
     }
@@ -274,39 +210,101 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // 스레드가 다운로드 받아서 파싱한 결과를 가지고 맵 뷰에 마커를 출력해달라고 요청
     val handler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
-            Log.e("toiletList", toiletList.toString())
-            for (map in toiletList) {
-                addMarkers(map as MutableMap<String, Any>)
-            }
+
+            toiletRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                    if (dataSnapshot.exists()) {
+                        // looping through to values
+                        for (i in dataSnapshot.children) {
+                            toilet = i.getValue(Toilet::class.java)
+                            map = toilet!!.toMap()
+                            if(map["latitude"] != null || map["longtitude"] != null)
+                                addMarkers(map)
+                        }
+                    }
+
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {}
+            })
+
         }
     }
 
     // 마커를 추가하는 함수
     @SuppressLint("PotentialBehaviorOverride")
-    fun addMarkers(toilet: MutableMap<String, Any>) {
+    fun addMarkers(toilet: MutableMap<String, Any?>) {
         // 맵이 직접 마커를 생성 - 작은 지역에 마커가 많으면 보기가 안좋습니다.
         // 마커 누르면 하단시트
-
-
-        googleMap?.addMarker(
+        val marker: Marker? = googleMap?.addMarker(
             MarkerOptions()
-                .position(LatLng(toilet.get("Lat") as Double, toilet.get("Lng") as Double))
-                .title(toilet.get("toiletNm") as String)
-                .snippet(toilet.get("lnmadr") as String)
+                .position(LatLng(toilet["latitude"] as Double, toilet["longitude"] as Double))
+                .title(toilet["toiletNm"] as String)
                 .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+                .snippet(toilet["lnmadr"] as String)
         )
 
-        googleMap?.setOnMarkerClickListener(GoogleMap.OnMarkerClickListener { marker -> // TODO Auto-generated method stub
+        marker?.tag =
+            toilet["rdnmadr"] as String + "/" +
+                    toilet["unisexToiletYn"] as String + "/" +
+                    toilet["phoneNumber"] as String + "/" +
+                    toilet["openTime"] as String + "/" +
+                    toilet["emgBellYn"] as String + "/" +
+                    toilet["enterentCctvYn"] as String + "/" +
+                    toilet["dipersExchgPosi"] as String + "/" +
+
+                    toilet["menToiletBowlNumber"].toString() + "/" +
+                    toilet["menUrineNumber"].toString() + "/" +
+                    toilet["menHandicapToiletBowlNumber"].toString() + "/" +
+                    toilet["menHandicapUrinalNumber"].toString() + "/" +
+                    toilet["menChildrenToiletBowlNumber"].toString() + "/" +
+                    toilet["menChildrenUrinalNumber"].toString() + "/" +
+                    toilet["ladiesToiletBowlNumber"].toString() + "/" +
+                    toilet["ladiesHandicapToiletBowlNumber"].toString() + "/" +
+                    toilet["ladiesChildrenToiletBowlNumber"].toString()
+
+        googleMap?.setOnMarkerClickListener(GoogleMap.OnMarkerClickListener { // TODO Auto-generated method stub
+
             if (true) {
+
                 val bottomSheet = BottomSheet()
+
+                var arr = it.tag.toString().split("/") //마커에 붙인 태그
+                val args = Bundle()
+                args.putString("toiletNm", it.title.toString())
+                args.putString("rdnmadr", arr[0])
+                args.putString("lnmadr", it.snippet.toString())
+                args.putString("unisexToiletYn", arr[1])
+                args.putString("menToiletBowlNumber", arr[7])
+                args.putString("menUrineNumber", arr[8])
+                args.putString("menHandicapToiletBowlNumber", arr[9])
+                args.putString("menHandicapUrinalNumber", arr[10])
+                args.putString("menChildrenToiletBowlNumber", arr[11])
+                args.putString("menChildrenUrinalNumber", arr[12])
+                args.putString("ladiesToiletBowlNumber", arr[13])
+                args.putString("ladiesHandicapToiletBowlNumber", arr[14])
+                args.putString("ladiesChildrenToiletBowlNumber", arr[15])
+                args.putString("phoneNumber", arr[2])
+                args.putString("openTime", arr[3])
+                args.putString("position", it.position.toString())
+                args.putString("emgBellYn", arr[4])
+                args.putString("enterentCctvYn", arr[5])
+                args.putString("dipersExchgPosi", arr[6])
+
+                bottomSheet.arguments = args
                 bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+
                 googleMap?.moveCamera(
-                    CameraUpdateFactory.newLatLngZoom(marker.position, DEFAULT_ZOOM_LEVEL))
+                    CameraUpdateFactory.newLatLngZoom(it.position, DEFAULT_ZOOM_LEVEL))
+
                 return@OnMarkerClickListener true
             }
             false
         })
     }
+
+
 
     var toiletThread: ToiletThread? = null
 

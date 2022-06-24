@@ -1,23 +1,28 @@
 package com.example.toilet_seoul
 
+import android.accounts.Account
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModelProviders
+import androidx.room.ColumnInfo
 
 class DangerCall : AppCompatActivity() {
-    val mContext = this
+
+    //val mContext = this
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.danger_call)
 
         findViewById<Button>(R.id.dialBtn).setOnClickListener {
-
             //val input = findViewById<EditText>(R.id.phoneNumEdt).text.toString()
-            //val myUri = Uri.parse("tel:${input}")
-            val myUri = Uri.parse("tel:01012345678") //데이터베이스 연결 전 임의로
+            val myUri = Uri.parse("tel:01012345678")
+            //val myUri = Uri.parse("tel:01012345678") //데이터베이스 연결 전 임의로
             val myIntent = Intent(Intent.ACTION_DIAL, myUri)
             startActivity(myIntent)
         }
@@ -59,4 +64,5 @@ class DangerCall : AppCompatActivity() {
         }
 
     }
-}
+
+    }

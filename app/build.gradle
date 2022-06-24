@@ -4,6 +4,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-android'
     id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -36,6 +37,10 @@ android {
     dataBinding{
         enabled true
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -66,7 +71,26 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0' // design support Library
+    implementation fileTree(dir: 'libs', include: ['*.jar'])// design support Library
+
+    // room
+    implementation 'androidx.room:room-runtime:2.3.0'
+    kapt 'androidx.room:room-compiler:2.3.0'
+
+    def lifecycle_version = "2.3.0"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    /*
+    * 안드로이드 공식 문서에서는 현재 코틀린으로 ViewModel 을 사용할 때 activity-ktx artifact 에 있는
+    * by viewModels() 속성을 사용하라고 명시하고 있습니다.
+    * */
+    def activity_version = "1.2.1"
+    implementation "androidx.activity:activity-ktx:$activity_version"
+
+
+    // recyclerview, cardview
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    implementation "androidx.cardview:cardview:1.0.0"
 }
