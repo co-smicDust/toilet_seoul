@@ -1,16 +1,12 @@
 package com.example.toilet_seoul
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.example.toilet_seoul.databinding.ToiletRowBinding
-import java.lang.Boolean.TRUE
 
 class ToiletAdapter(private val toiletList: List<Toilet>) : RecyclerView.Adapter<ToiletAdapter.ToiletHolder>() {
 
@@ -43,15 +39,22 @@ class ToiletAdapter(private val toiletList: List<Toilet>) : RecyclerView.Adapter
     }
 
     class ToiletHolder(private val itemBinding: ToiletRowBinding) : RecyclerView.ViewHolder(itemBinding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(toilet: Toilet) {
+            val distance = QueryActivity().getDistance(toilet.latitude!!, toilet.longitude!!)
+
             itemBinding.tvName.text = toilet.toiletNm
             itemBinding.tvAddress.text = toilet.lnmadr
-            itemBinding.tvUnisex.text = toilet.unisexToiletYn
+            itemBinding.tvUnisex.text = "공용화장실여부: ${toilet.unisexToiletYn}"
+
+            if (distance != 0)
+                itemBinding.tvDistance.text = "거리: ${distance}m"
+
             itemBinding.viewOnMap.setOnClickListener {
                 val intent = Intent(it.context, MainActivity::class.java)
                 val bundle = Bundle()
                 bundle.putSerializable("toilet", toilet)
-                bundle.putBoolean("clicked", TRUE)
+                bundle.putBoolean("clicked", true)
                 intent.putExtra("bundle", bundle)
                 it.context.startActivity(intent)
             }

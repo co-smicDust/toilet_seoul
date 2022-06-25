@@ -15,7 +15,7 @@ class ThirdFragment : Fragment(), MainActivity.onBackPressedListener {
 
     private lateinit var binding: FilterSearchBinding
 
-    val values = mutableMapOf(
+    private val values = mutableMapOf(
         "star4" to false,
         "star3" to false,
         "star2" to false,
@@ -39,8 +39,7 @@ class ThirdFragment : Fragment(), MainActivity.onBackPressedListener {
         savedInstanceState: Bundle?,
     ): View {
         binding = FilterSearchBinding.inflate(layoutInflater)
-        val view: View = binding.root
-        return view
+        return binding.root
     }
 
     override fun onBackPressed() {
@@ -68,8 +67,8 @@ class ThirdFragment : Fragment(), MainActivity.onBackPressedListener {
             values["feminineProducts"] = binding.feminineProducts.isChecked
             values["cctv"] = binding.cctv.isChecked
 
-            val checked_item = values.filter{(key, value)-> value }
-            val checked = joinToString(checked_item.keys, "/", "", "")
+            val checkedItem = values.filter{(_, value)-> value }
+            val checked = joinToString(checkedItem.keys, "/", "", "")
 
             if (checked.isNotEmpty()){
                 val intent = Intent(context, QueryActivity::class.java)
@@ -99,7 +98,7 @@ class ThirdFragment : Fragment(), MainActivity.onBackPressedListener {
         }
     }
 
-    fun <T> joinToString(
+    private fun <T> joinToString(
         collection: Collection<T>,
         separator: String,
         prefix: String,

@@ -1,11 +1,14 @@
 package com.example.toilet_seoul
 
+import android.location.Location
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.toilet_seoul.databinding.ActivityQueryBinding
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.database.*
+
 
 class QueryActivity : AppCompatActivity() {
 
@@ -21,7 +24,7 @@ class QueryActivity : AppCompatActivity() {
 
     private lateinit var toilet:Toilet
 
-    var checked: String? = null
+    private var checked: String? = null
     private lateinit var arr: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,6 +42,37 @@ class QueryActivity : AppCompatActivity() {
 
         checked = intent.getStringExtra("checked")
         arr = checked?.split("/")!!
+    }
+
+    fun getDistance(latitude: Double, longitude: Double): Int {
+        val currentLatLng = MapFragment().getMyLocation()
+
+        val locationA = Location("A")
+        val locationB = Location("B")
+
+        locationA.latitude = currentLatLng.latitude
+        locationA.longitude = currentLatLng.longitude
+        locationB.latitude = latitude
+        locationB.longitude = longitude
+
+        //에뮬레이터에서 현재 위치를 구할 수 없어 임의로 기본값 선택.
+        // 현재 위치 구할 수 있는 환경이라면, 위치 권한 거부했을 때의 기본값(현재 CITY_HALL)으로 바꿀 것 요망
+        return if (currentLatLng != LatLng(0.0, 0.0))
+            locationA.distanceTo(locationB).toInt()
+        else 0
+    }
+
+    private fun distanceFilter(latitude: Double, longitude: Double) {
+
+        val distance = getDistance(latitude, longitude)
+
+        if ("distance1000" in arr) {
+            if (distance <= 1000) { toiletList.add(toilet) }
+        } else if ("distance500" in arr) {
+            if (distance <= 500) { toiletList.add(toilet) }
+        } else if ("distance200" in arr) {
+            if (distance <= 200) { toiletList.add(toilet) }
+        }
     }
 
     private fun unisexFilter() {
@@ -71,6 +105,8 @@ class QueryActivity : AppCompatActivity() {
                     for (i in dataSnapshot.children) {
                         toilet = i.getValue(Toilet::class.java)!!
 
+                        if (toilet.latitude != null && toilet.longitude != null)
+                            distanceFilter(toilet.latitude!!, toilet.longitude!!)
                         if ("notUnisex" in arr)
                             unisexFilter()
                         if ("menDisabled" in arr)
@@ -83,7 +119,7 @@ class QueryActivity : AppCompatActivity() {
                             womenWithChildrenFilter()
 
                     }
-                    val result = toiletList.groupingBy { it }.eachCount().filter { it.value == (arr.size -1) }.keys
+                    val result = toiletList.groupingBy { it }.eachCount().filter { it.value == arr.size }.keys
                     resultList.addAll(result)
 
                     if (resultList.isEmpty()){
@@ -98,7 +134,4 @@ class QueryActivity : AppCompatActivity() {
         })
     }
 
-    override fun onStop() {
-        super.onStop()
-    }
 }

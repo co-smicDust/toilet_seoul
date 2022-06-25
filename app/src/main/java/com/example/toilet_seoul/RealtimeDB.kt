@@ -27,26 +27,26 @@ class RealtimeDB : AppCompatActivity() {
             //데이터의 시작과 종료 인덱스
             var pageNo = 193
             //과천만
-            var numOfRows = 100
+            val numOfRows = 100
             //데이터의 전체 개수를 저장하기 위한 프로퍼티
             //var count = 350
 
             do {
                 //파싱할 URL 생성
-                var url =
+                val url =
                     URL(
                         "http://api.data.go.kr/openapi/tn_pubr_public_toilet_api?serviceKey=" + API_KEY + "&pageNo=" + pageNo + "&numOfRows=" + numOfRows + "&type=json"
                     )
                 //연결해서 문자열 가져오기
                 val connection = url.openConnection()
                 val data = connection.getInputStream()
-                var isr = InputStreamReader(data)
+                val isr = InputStreamReader(data)
                 // br: 라인 단위로 데이터를 읽어오기 위해서 만듦
-                var br = BufferedReader(isr)
+                val br = BufferedReader(isr)
 
                 // Json 문서는 일단 문자열로 데이터를 모두 읽어온 후, Json에 관련된 객체를 만들어서 데이터를 가져옴
-                var str: String ?= null
-                var buf = StringBuffer()
+                var str: String?
+                val buf = StringBuffer()
 
                 do {
                     str = br.readLine()

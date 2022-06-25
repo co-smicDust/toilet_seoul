@@ -1,5 +1,6 @@
 package com.example.toilet_seoul
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
@@ -15,10 +16,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCa
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.internal.ContextUtils.getActivity
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
 
 var toiletNm: String? = null
 var rdnmadr: String? = null
@@ -123,41 +120,41 @@ class BottomSheet : BottomSheetDialogFragment() {
 
         //비상연락 버튼클릭이벤트 - DangerCall
         view?.findViewById<FloatingActionButton>(R.id.SOSbtn)?.setOnClickListener {
-            val intent = Intent(getContext(), DangerCall::class.java)
+            val intent = Intent(context, DangerCall::class.java)
             startActivity(intent)
         }
-
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onStart() {
         super.onStart()
         hideAppBar()
         bottomSheetBehavior?.state ?: BottomSheetBehavior.STATE_COLLAPSED
 
-        view?.findViewById<TextView>(R.id.name)?.setText(toiletNm)
-        view?.findViewById<TextView>(R.id.address)?.setText(lnmadr)
-        view?.findViewById<TextView>(R.id.phone_number)?.setText(phoneNumber)
-        view?.findViewById<TextView>(R.id.open_time)?.setText(openTime)
+        view?.findViewById<TextView>(R.id.name)?.text = toiletNm
+        view?.findViewById<TextView>(R.id.address)?.text = lnmadr
+        view?.findViewById<TextView>(R.id.phone_number)?.text = phoneNumber
+        view?.findViewById<TextView>(R.id.open_time)?.text = openTime
 
-        view?.findViewById<TextView>(R.id.toiletNm)?.setText("화장실명: " + toiletNm)
-        view?.findViewById<TextView>(R.id.rdnmadr)?.setText("소재지도로명주소: " + rdnmadr)
-        view?.findViewById<TextView>(R.id.lnmadr)?.setText("소재지지번주소: " + lnmadr)
-        view?.findViewById<TextView>(R.id.unisexToiletYn)?.setText("남녀공용화장실여부: " + unisexToiletYn)
-        view?.findViewById<TextView>(R.id.menToiletBowlNumber)?.setText("남성용-대변기수: " + menToiletBowlNumber)
-        view?.findViewById<TextView>(R.id.menUrineNumber)?.setText("남성용-소변기수: " + menUrineNumber)
-        view?.findViewById<TextView>(R.id.menHandicapToiletBowlNumber)?.setText("남성용-장애인용대변기수: " + menHandicapToiletBowlNumber)
-        view?.findViewById<TextView>(R.id.menHandicapUrinalNumber)?.setText("남성용-장애인용소변기수: " + menHandicapUrinalNumber)
-        view?.findViewById<TextView>(R.id.menChildrenToiletBowlNumber)?.setText("남성용-어린이용대변기수: " + menChildrenToiletBowlNumber)
-        view?.findViewById<TextView>(R.id.menChildrenUrinalNumber)?.setText("남성용-어린이용소변기수: " + menChildrenUrinalNumber)
-        view?.findViewById<TextView>(R.id.ladiesToiletBowlNumber)?.setText("여성용-대변기수: " + ladiesToiletBowlNumber)
-        view?.findViewById<TextView>(R.id.ladiesHandicapToiletBowlNumber)?.setText("여성용-장애인용대변기수: " + ladiesHandicapToiletBowlNumber)
-        view?.findViewById<TextView>(R.id.ladiesChildrenToiletBowlNumber)?.setText("여성용-어린이용대변기수: " + ladiesChildrenToiletBowlNumber)
-        view?.findViewById<TextView>(R.id.phoneNumber)?.setText("전화번호: " + phoneNumber)
-        view?.findViewById<TextView>(R.id.openTime)?.setText("개방시간: " + openTime)
-        view?.findViewById<TextView>(R.id.position)?.setText("위치(좌표): " + position)
-        view?.findViewById<TextView>(R.id.emgBellYn)?.setText("비상벨설치: " + emgBellYn)
-        view?.findViewById<TextView>(R.id.enterentCctvYn)?.setText("화장실입구CCTV설치유무: " + enterentCctvYn)
-        view?.findViewById<TextView>(R.id.dipersExchgPosi)?.setText("기저귀교환대장소: " + dipersExchgPosi)
+        view?.findViewById<TextView>(R.id.toiletNm)?.text = "화장실명: $toiletNm"
+        view?.findViewById<TextView>(R.id.rdnmadr)?.text = "소재지도로명주소: $rdnmadr"
+        view?.findViewById<TextView>(R.id.lnmadr)?.text = "소재지지번주소: $lnmadr"
+        view?.findViewById<TextView>(R.id.unisexToiletYn)?.text = "남녀공용화장실여부: $unisexToiletYn"
+        view?.findViewById<TextView>(R.id.menToiletBowlNumber)?.text = "남성용-대변기수: $menToiletBowlNumber"
+        view?.findViewById<TextView>(R.id.menUrineNumber)?.text = "남성용-소변기수: $menUrineNumber"
+        view?.findViewById<TextView>(R.id.menHandicapToiletBowlNumber)?.text = "남성용-장애인용대변기수: $menHandicapToiletBowlNumber"
+        view?.findViewById<TextView>(R.id.menHandicapUrinalNumber)?.text = "남성용-장애인용소변기수: $menHandicapUrinalNumber"
+        view?.findViewById<TextView>(R.id.menChildrenToiletBowlNumber)?.text = "남성용-어린이용대변기수: $menChildrenToiletBowlNumber"
+        view?.findViewById<TextView>(R.id.menChildrenUrinalNumber)?.text = "남성용-어린이용소변기수: $menChildrenUrinalNumber"
+        view?.findViewById<TextView>(R.id.ladiesToiletBowlNumber)?.text = "여성용-대변기수: $ladiesToiletBowlNumber"
+        view?.findViewById<TextView>(R.id.ladiesHandicapToiletBowlNumber)?.text = "여성용-장애인용대변기수: $ladiesHandicapToiletBowlNumber"
+        view?.findViewById<TextView>(R.id.ladiesChildrenToiletBowlNumber)?.text = "여성용-어린이용대변기수: $ladiesChildrenToiletBowlNumber"
+        view?.findViewById<TextView>(R.id.phoneNumber)?.text = "전화번호: $phoneNumber"
+        view?.findViewById<TextView>(R.id.openTime)?.text = "개방시간: $openTime"
+        view?.findViewById<TextView>(R.id.position)?.text = "위치(좌표): $position"
+        view?.findViewById<TextView>(R.id.emgBellYn)?.text = "비상벨설치: $emgBellYn"
+        view?.findViewById<TextView>(R.id.enterentCctvYn)?.text = "화장실입구CCTV설치유무: $enterentCctvYn"
+        view?.findViewById<TextView>(R.id.dipersExchgPosi)?.text = "기저귀교환대장소: $dipersExchgPosi"
     }
 
     private fun hideAppBar() {

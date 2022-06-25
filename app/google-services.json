@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1046765737579",
+    "firebase_url": "https://toilet-seoul-default-rtdb.firebaseio.com",
     "project_id": "toilet-seoul",
     "storage_bucket": "toilet-seoul.appspot.com"
   },
@@ -13,6 +14,38 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "1046765737579-dkafjdnkij1kooqb8m0e4pr3q1edg5j3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toilet_seoul",
+            "certificate_hash": "d817ff251dff41bd3efacb9616520fad12a08016"
+          }
+        },
+        {
+          "client_id": "1046765737579-ppki2h35oojgrgne36g88ablbc29bs9s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toilet_seoul",
+            "certificate_hash": "5f5a32d212acd258b4bcbe59bf83f7f0952edecb"
+          }
+        },
+        {
+          "client_id": "1046765737579-u38la8kcamtactvpa4ptbbkecv1fe195.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toilet_seoul",
+            "certificate_hash": "4d36efd45d48106a02d900aa5db9d2c529173246"
+          }
+        },
+        {
+          "client_id": "1046765737579-ucmb1ub2f70asqlu0eraeeqjs3378a4r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.toilet_seoul",
+            "certificate_hash": "5318ca033f2d7264b1e17c681f9d05de7688a4be"
+          }
+        },
         {
           "client_id": "1046765737579-sdefstgibmgsv5nnpcfdp2iod8c1qg70.apps.googleusercontent.com",
           "client_type": 3

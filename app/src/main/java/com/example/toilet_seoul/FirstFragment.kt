@@ -15,7 +15,7 @@ class FirstFragment : Fragment(), MainActivity.onBackPressedListener {
         // Inflate the layout for this fragment
         //setHasOptionsMenu(true)
         //(activity as AppCompatActivity).supportActionBar?.title = "My Title"
-        return inflater.inflate(com.example.toilet_seoul.R.layout.personal_information, container, false)
+        return inflater.inflate(R.layout.personal_information, container, false)
     }
 
     override fun onBackPressed() {

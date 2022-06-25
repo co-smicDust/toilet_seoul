@@ -8,27 +8,17 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.location.Location
 import android.location.LocationManager
-import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.*
+import android.view.*
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.maps.android.collections.MarkerManager
 
 class MapFragment : Fragment(), OnMapReadyCallback {
 
@@ -180,16 +170,16 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         // 위치를 측정하는 프로바이더를 GPS 센서로 지정
         val locationProvider: String = LocationManager.GPS_PROVIDER
         // 위치 서비스 객체를 불러옴
-        val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val locationManager = activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
         // 마지막으로 업데이트된 위치를 가져옴
-        val lastKnownLocation: Location? = locationManager.getLastKnownLocation(locationProvider)
+        val lastKnownLocation: Location? = locationManager?.getLastKnownLocation(locationProvider)
         // 위도 경도 객체로 반환
-        if (lastKnownLocation != null) {
+        return if (lastKnownLocation != null) {
             // 위도 경도 객체로 반환
-            return LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
+            LatLng(lastKnownLocation.latitude, lastKnownLocation.longitude)
         } else {
             // 위치를 구하지 못한경우 기본값 반환
-            return CITY_HALL
+            CITY_HALL
         }
     }
 
@@ -292,6 +282,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
             args.putString("emgBellYn", arr[4])
             args.putString("enterentCctvYn", arr[5])
             args.putString("dipersExchgPosi", arr[6])
+
+            args.putParcelable("latlng", it.position)
 
             bottomSheet.arguments = args
             bottomSheet.show(parentFragmentManager, bottomSheet.tag)

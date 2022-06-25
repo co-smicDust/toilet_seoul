@@ -1,8 +1,6 @@
 package com.example.toilet_seoul
 
-import android.icu.lang.UProperty.AGE
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,8 +9,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
-import java.lang.Boolean.FALSE
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.navi_menu) // 홈버튼 이미지 변경
         supportActionBar?.setDisplayShowTitleEnabled(false) // 툴바에 타이틀 안보이게
 
-        setNavigationDrawer(); // call method
+        setNavigationDrawer() // call method
 
         if (savedInstanceState == null) {
 
@@ -48,12 +46,10 @@ class MainActivity : AppCompatActivity() {
 
         if (bundle != null && bundle.containsKey("toilet")) {
             val toilet = bundle.getSerializable("toilet") as Toilet
-            val clicked = bundle.getBoolean("clicked", FALSE)
+            val clicked = bundle.getBoolean("clicked", false)
             val send = Bundle()
             send.putSerializable("toilet", toilet)
             send.putBoolean("searching", clicked)
-            Log.d("main", toilet.toString())
-            Log.d("main_clicked?", clicked.toString())
 
             if (clicked){
                 supportFragmentManager.beginTransaction()
@@ -61,6 +57,25 @@ class MainActivity : AppCompatActivity() {
                     .commit()
 
                 mainFragment.arguments = send
+            }
+        }
+
+        val args: Bundle? = intent.getParcelableExtra("args")
+
+        if (args != null && args.containsKey("latlng")) {
+            val position: LatLng = args.getParcelable("latlng")!!
+            val showRoute = args.getBoolean("showRoute", false)
+
+            val pass = Bundle()
+            pass.putParcelable("latlng", position)
+            pass.putBoolean("showRoute", showRoute)
+
+            if (showRoute){
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.frame, mainFragment)
+                    .commit()
+
+                mainFragment.arguments = pass
             }
         }
 
@@ -76,16 +91,21 @@ class MainActivity : AppCompatActivity() {
         // implement setNavigationItemSelectedListener event on NavigationView
         navView.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem ->
             var frag: Fragment? = null // create a Fragment Object
-            val itemId = menuItem.getItemId() // get selected menu item's id
+            val itemId = menuItem.itemId // get selected menu item's id
             // check selected menu item's id and replace a Fragment Accordingly
-            if (itemId == R.id.first) {
-                frag = FirstFragment()
-            } else if (itemId == R.id.second) {
-                frag = SecondFragment()
-            } else if (itemId == R.id.third) {
-                frag = ThirdFragment()
-            } else if (itemId == R.id.go_to_main){
-                frag = MapFragment()
+            when (itemId) {
+                R.id.first -> {
+                    frag = FirstFragment()
+                }
+                R.id.second -> {
+                    frag = SecondFragment()
+                }
+                R.id.third -> {
+                    frag = ThirdFragment()
+                }
+                R.id.go_to_main -> {
+                    frag = MapFragment()
+                }
             }
             // display a toast message with menu item's title
             Toast.makeText(applicationContext, menuItem.title, Toast.LENGTH_SHORT).show()
@@ -102,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
     // 툴바 메뉴 버튼이 클릭 됐을 때 실행하는 함수
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        var dLayout: DrawerLayout = findViewById(R.id.drawer_layout) // initiate a DrawerLayout
+        val dLayout: DrawerLayout = findViewById(R.id.drawer_layout) // initiate a DrawerLayout
 
         // 클릭한 툴바 메뉴 아이템 id 마다 다르게 실행하도록 설정
         when(item.itemId){

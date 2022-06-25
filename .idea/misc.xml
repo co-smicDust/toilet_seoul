@@ -18,13 +18,16 @@
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/toilet_seoul/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
         <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/activity_query.xml" value="0.18985334918747523" />
         <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/appbar.xml" value="0.10989583333333333" />
-        <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/bottom_sheet.xml" value="0.16140350877192983" />
+        <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/bottom_sheet.xml" value="0.1" />
         <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/contact_setting.xml" value="0.2" />
         <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/danger_call.xml" value="0.12681159420289856" />
         <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/filter_search.xml" value="0.2" />
-        <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/map_view.xml" value="0.12681159420289856" />
+        <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/map_view.xml" value="0.1" />
         <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/personal_information.xml" value="0.12681159420289856" />
         <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/toilet_row.xml" value="0.1" />
+        <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/layout/toolbar.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/menu-v26/toolbar.xml" value="0.10989583333333333" />
+        <entry key="..\:/Users/lilyd/StudioProjects/toilet_seoul/app/src/main/res/menu/toolbar.xml" value="0.1" />
       </map>
     </option>
   </component>
