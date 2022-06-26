@@ -230,7 +230,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     // 마커를 추가하는 함수
     @SuppressLint("PotentialBehaviorOverride")
     fun addMarkers(toilet: MutableMap<String, Any?>) {
-        // 맵이 직접 마커를 생성 - 작은 지역에 마커가 많으면 보기가 안좋습니다.
+        // 맵이 직접 마커를 생성
         // 마커 누르면 하단시트
         val marker: Marker? = googleMap?.addMarker(
             MarkerOptions()
@@ -241,6 +241,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         )
 
         marker?.tag =
+            toilet["toiletNum"].toString() + "/" +
             toilet["rdnmadr"] as String + "/" +
                     toilet["unisexToiletYn"] as String + "/" +
                     toilet["phoneNumber"] as String + "/" +
@@ -263,6 +264,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             val arr = it.tag.toString().split("/") //마커에 붙인 태그
             val args = Bundle()
+            args.putString("toiletNum", arr[16])
             args.putString("toiletNm", it.title.toString())
             args.putString("rdnmadr", arr[0])
             args.putString("lnmadr", it.snippet.toString())

@@ -1,7 +1,11 @@
 package com.example.toilet_seoul
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -11,6 +15,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity() {
@@ -122,6 +133,22 @@ class MainActivity : AppCompatActivity() {
 
     // 툴바 메뉴 버튼이 클릭 됐을 때 실행하는 함수
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        //왼쪽 바 상단 닉네임 불러오기
+        val database: DatabaseReference = Firebase.database.reference
+        val currentUser = Firebase.auth.currentUser
+        val userRef = database.child("User").child(currentUser?.uid.toString()).child("userNm")
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            @SuppressLint("SetTextI18n")
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                findViewById<TextView>(R.id.text).text = dataSnapshot.value.toString() + "님"
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+            }
+        })
+
         val dLayout: DrawerLayout = findViewById(R.id.drawer_layout) // initiate a DrawerLayout
 
         // 클릭한 툴바 메뉴 아이템 id 마다 다르게 실행하도록 설정

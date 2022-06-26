@@ -26,6 +26,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
+var toiletNum: Int? = null
 var toiletNm: String? = null
 var rdnmadr: String? = null
 var lnmadr: String? = null
@@ -79,6 +80,7 @@ class BottomSheet : BottomSheetDialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        toiletNum = arguments?.getInt("toiletNum")
         toiletNm = arguments?.getString("toiletNm")
         rdnmadr = arguments?.getString("rdnmadr")
         lnmadr = arguments?.getString("lnmadr")
@@ -192,6 +194,7 @@ class BottomSheet : BottomSheetDialogFragment() {
         view?.findViewById<TextView>(R.id.emgBellYn)?.text = "비상벨설치: $emgBellYn"
         view?.findViewById<TextView>(R.id.enterentCctvYn)?.text = "화장실입구CCTV설치유무: $enterentCctvYn"
         view?.findViewById<TextView>(R.id.dipersExchgPosi)?.text = "기저귀교환대장소: $dipersExchgPosi"
+        view?.findViewById<TextView>(R.id.toiletNum)?.text = "구분번호: $toiletNum"
     }
 
     private fun hideAppBar() {

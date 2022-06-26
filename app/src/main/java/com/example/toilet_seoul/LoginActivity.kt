@@ -22,7 +22,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 
-data class User(val userNm: String? = null, val emgContact: String? = null, val review: String? = null)
+data class User(val userNm: String? = null)
 
 class LoginActivity : AppCompatActivity() {
     var auth: FirebaseAuth? = null

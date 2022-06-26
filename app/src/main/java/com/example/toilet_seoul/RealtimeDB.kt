@@ -69,7 +69,8 @@ class RealtimeDB : AppCompatActivity() {
 
                     val obj = items.getJSONObject(i)
 
-                    val toilet = Toilet(obj.getString("toiletNm"),
+                    val toilet = Toilet(i,
+                        obj.getString("toiletNm"),
                         obj.getString("rdnmadr"),
                         obj.getString("lnmadr"),
                         obj.getString("unisexToiletYn"),
