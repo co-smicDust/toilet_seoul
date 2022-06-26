@@ -287,6 +287,15 @@
                         android:layout_marginVertical="@dimen/spacing_large"
                         android:background="@color/grey_10" />
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -405,6 +414,12 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:id="@+id/dipersExchgPosi" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:id="@+id/toiletNum" />
 
                     </LinearLayout>
 
