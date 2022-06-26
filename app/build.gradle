@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -70,4 +71,12 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])// design support Library
+
+    // room
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+
+    // livedata
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    kapt 'android.arch.lifecycle:compiler:1.1.1'
 }

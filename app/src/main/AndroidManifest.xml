@@ -25,7 +25,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDTBNTIN50255Bw1VF31-l03yzmFAQIJaU" />
+            android:value="AIzaSyC2uKyez8Jor1oxS8Ml59WP6H63z9ywF9s" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -36,24 +36,15 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".DangerCall"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <!-- category android:name="android.intent.category.LAUNCHER" ! -->
-            </intent-filter>
-        </activity>
-
         <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
@@ -65,11 +56,11 @@
         <activity
             android:name=".QueryActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
         </activity>
-
+        <activity
+            android:name=".AddActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
