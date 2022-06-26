@@ -2,7 +2,11 @@ package com.example.toilet_seoul
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.Intent.ACTION_DIAL
+import android.content.Intent.ACTION_SENDTO
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +14,11 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -45,6 +54,29 @@ class BottomSheet : BottomSheetDialogFragment() {
         )
     }
 
+    private var inputPhoneNum: String? = null
+
+    private val adapter: ContactAdapter by lazy {
+        ContactAdapter({ contact ->
+            inputPhoneNum = contact.number
+            if (inputPhoneNum != null) {
+                val myUri = Uri.parse("smsto:${inputPhoneNum}") //데이터베이스 연결 전 임의로
+                val myIntent = Intent(ACTION_SENDTO, myUri)
+                // 문자 전송 화면 이동 시 미리 문구를 적어서 보내기
+                // myIntent를 가지고 갈 때 -> putExtra로 데이터를 담아서 보내자
+                myIntent.putExtra("sms_body", "위급 상황입니다.")
+                startActivity(myIntent)
+            }
+        }, { contact ->
+            inputPhoneNum = contact.number
+            if(inputPhoneNum != null){
+                val myUri = Uri.parse("tel:${inputPhoneNum}")
+                val myIntent = Intent(ACTION_DIAL, myUri)
+                startActivity(myIntent)
+            }
+        })
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toiletNm = arguments?.getString("toiletNm")
@@ -66,6 +98,12 @@ class BottomSheet : BottomSheetDialogFragment() {
         emgBellYn = arguments?.getString("emgBellYn")
         enterentCctvYn = arguments?.getString("enterentCctvYn")
         dipersExchgPosi = arguments?.getString("dipersExchgPosi")
+
+        val contactViewModel: ContactViewModel =
+            ViewModelProvider(this, ContactViewModel.Factory(requireActivity().application)).get(ContactViewModel::class.java)
+        contactViewModel.getAll().observe(this, Observer<List<Contact>> { contacts ->
+            adapter.setContacts(contacts!!)
+        })
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?):Dialog{
@@ -74,7 +112,7 @@ class BottomSheet : BottomSheetDialogFragment() {
         //setting layout with bottom sheet
         bottomSheet.setContentView(R.layout.bottom_sheet)
 
-        bottomSheet.behavior.setPeekHeight(800)
+        bottomSheet.behavior.peekHeight = 800
 
         bottomSheet.behavior.addBottomSheetCallback(object : BottomSheetCallback() {
             override fun onStateChanged(view: View, newState: Int) {
@@ -120,8 +158,7 @@ class BottomSheet : BottomSheetDialogFragment() {
 
         //비상연락 버튼클릭이벤트 - DangerCall
         view?.findViewById<FloatingActionButton>(R.id.SOSbtn)?.setOnClickListener {
-            val intent = Intent(context, DangerCall::class.java)
-            startActivity(intent)
+            showDialog()
         }
     }
 
@@ -176,4 +213,20 @@ class BottomSheet : BottomSheetDialogFragment() {
         return array.getDimension(0, 0f).toInt()
     }
 
+    fun showDialog(){
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("짧게 누르면 문자, 길게 누르면 전화")
+        val customLayout: View = layoutInflater.inflate(R.layout.alert_dialog, null)
+        builder.setView(customLayout)
+        builder.setNegativeButton("닫기", DialogInterface.OnClickListener { dialog, i ->
+            dialog.dismiss()
+        })
+        val alertDialog = builder.create()
+        val recyclerView: RecyclerView =
+            customLayout.findViewById(R.id.recyclerView)
+        val llm = LinearLayoutManager(context)
+        recyclerView.layoutManager = llm
+        recyclerView.adapter = adapter
+        alertDialog.show()
+    }
 }
