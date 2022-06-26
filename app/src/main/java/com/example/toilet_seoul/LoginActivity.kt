@@ -21,7 +21,6 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
-
 data class User(val userNm: String? = null, val emgContact: String? = null, val review: String? = null)
 
 class LoginActivity : AppCompatActivity() {
@@ -43,6 +42,12 @@ class LoginActivity : AppCompatActivity() {
         findViewById<Button>(R.id.google_signin_btn).setOnClickListener {
             //구글 로그인 버튼 누르면 로그인 과정 실행
             activityLauncher.launch(signInIntent)
+        }
+
+        findViewById<Button>(R.id.guest_btn).setOnClickListener {
+            //로그인 없이 게스트 이용
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
         }
 
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

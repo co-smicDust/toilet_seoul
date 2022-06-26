@@ -218,7 +218,6 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                 addMarkers(map)
                         }
                     }
-
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {}

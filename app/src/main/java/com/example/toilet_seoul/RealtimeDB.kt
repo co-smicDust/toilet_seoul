@@ -29,7 +29,7 @@ class RealtimeDB : AppCompatActivity() {
             //과천만
             val numOfRows = 100
             //데이터의 전체 개수를 저장하기 위한 프로퍼티
-            //var count = 350
+            var count = 350
 
             do {
                 //파싱할 URL 생성
@@ -95,7 +95,7 @@ class RealtimeDB : AppCompatActivity() {
                 }
                 //인덱스를 변경해서 데이터 계속 가져오기
                 pageNo = pageNo + 1
-            } while (pageNo < 194) //일단 과천만 표시하려고
+            } while (pageNo <=count) //일단 과천만 표시하려고
 
 
             startActivity(Intent(this, MainActivity::class.java))

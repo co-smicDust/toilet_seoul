@@ -8,23 +8,31 @@ import android.content.Intent.ACTION_DIAL
 import android.content.Intent.ACTION_SENDTO
 import android.net.Uri
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 var toiletNm: String? = null
 var rdnmadr: String? = null
@@ -46,6 +54,8 @@ var emgBellYn: String? = null
 var enterentCctvYn: String? = null
 var dipersExchgPosi: String? = null
 
+var latlng: LatLng? = null
+
 class BottomSheet : BottomSheetDialogFragment() {
 
     val bottomSheetBehavior = view?.let {
@@ -54,6 +64,7 @@ class BottomSheet : BottomSheetDialogFragment() {
         )
     }
 
+    //비상 연락망 관련
     private var inputPhoneNum: String? = null
 
     private val adapter: ContactAdapter by lazy {
@@ -77,8 +88,26 @@ class BottomSheet : BottomSheetDialogFragment() {
         })
     }
 
+    //리뷰 관련
+    val database: DatabaseReference = Firebase.database.reference
+    private val currentUser = Firebase.auth.currentUser
+    private val toiletRef = database.child("toilet")
+    private val reviewRef = database.child("toilet").child(R.id.toiletNum.toString()).child("review")
+
+    //var curUID = currentUser?.uid.toString()
+    var curUID = "지영 테스트"
+
+    private var userNm: String? = null
+    private var ratingStar: Double? = null
+    private var contentR: String? = null
+
+    private lateinit var reviewAdapter: ReviewAdapter
+    private var newsList: ArrayList<Review> = ArrayList()
+
+    @SuppressLint("CutPasteId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         toiletNm = arguments?.getString("toiletNm")
         rdnmadr = arguments?.getString("rdnmadr")
         lnmadr = arguments?.getString("lnmadr")
@@ -98,6 +127,8 @@ class BottomSheet : BottomSheetDialogFragment() {
         emgBellYn = arguments?.getString("emgBellYn")
         enterentCctvYn = arguments?.getString("enterentCctvYn")
         dipersExchgPosi = arguments?.getString("dipersExchgPosi")
+
+        latlng = arguments?.getParcelable("latlng") as LatLng?
 
         val contactViewModel: ContactViewModel =
             ViewModelProvider(this, ContactViewModel.Factory(requireActivity().application)).get(ContactViewModel::class.java)
@@ -149,9 +180,37 @@ class BottomSheet : BottomSheetDialogFragment() {
 
 
     //button clicked
+    @SuppressLint("CutPasteId")
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        //리뷰 바텀시트 하단에 불러오기(아래 Unresolved Ref들은 레이아웃에 아이디 추가해야 함)
+        reviewRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                //userNm: 사용자 닉네임
+                userNm = snapshot.child(curUID).key
+                //ratingStar: 별점
+                ratingStar = snapshot.child(curUID).child("rate").value as Double?
+                //contentR: 리뷰내용
+                contentR = snapshot.child(curUID).child("content").value.toString()
+
+                val review = Review(userNm.toString(), ratingStar?.toFloat(), contentR, R.drawable.ic_personal) //사용자의 이미지(프사) 추가?
+                if (!newsList.contains(review))
+                    newsList.add(review)
+
+                reviewAdapter = ReviewAdapter(context!!, newsList)
+                view?.findViewById<RecyclerView>(R.id.recyclerview)?.layoutManager = LinearLayoutManager(context)
+                view?.findViewById<RecyclerView>(R.id.recyclerview)?.adapter = reviewAdapter
+                view?.findViewById<RecyclerView>(R.id.recyclerview)?.setHasFixedSize(true)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+
+        // x를 누르면 dialog 닫힘
         view?.findViewById<ImageButton>(R.id.cancelBtn)?.setOnClickListener {
             dismiss()
         }
@@ -159,6 +218,25 @@ class BottomSheet : BottomSheetDialogFragment() {
         //비상연락 버튼클릭이벤트 - DangerCall
         view?.findViewById<FloatingActionButton>(R.id.SOSbtn)?.setOnClickListener {
             showDialog()
+        }
+
+        //리뷰 쓰기
+        view?.findViewById<Button>(R.id.confirmButton)?.setOnClickListener {
+            val contentText = view?.findViewById<EditText>(R.id.contentText)?.text
+            val rate: Float = view?.findViewById<RatingBar>(R.id.ratingBar)?.rating!!.toFloat()
+
+            if (contentText.toString() != "" && rate > 0){
+                //toiletNum-review에 리뷰 저장
+
+                reviewRef.child(curUID).child("rate").setValue(rate)
+                reviewRef.child(curUID).child("content").setValue(contentText.toString())
+
+                Toast.makeText(context, "리뷰가 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                contentText?.clear()
+                view?.findViewById<RatingBar>(R.id.ratingBar)?.rating = 0.0F
+            } else {
+                Toast.makeText(context, "별점이나 리뷰를 작성해주세요.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
